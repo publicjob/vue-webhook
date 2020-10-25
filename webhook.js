@@ -1,9 +1,27 @@
+const crypto = require('crypto')
+const { copyFile } = require('fs')
 const http = require('http')
+const SECRET = 'Cjl1134173583@'
 
-
+function sign(body) {
+  return `sha1=${crypto.createHmac('sha1', SECRET).update(body).digest('hex')}`
+}
 const server = http.createServer(function(req, res) {
   console.log(req.method, req.url) 
   if(req.method == 'POST' && req.url =='/webhook'){
+    let buffers = []
+    req.on('data', function(buffer) {
+      buffers.push(buffer)
+    })
+    req.on('end', function(buffer) {
+      let body = Buffer.concat(buffers)
+      let event = req.headers['x-github-event'] //event=push
+      // github请求过来时候，要传递请求体是body，同时还会传递一个签名signature过来，我需要验证签名对不对，对才往下走
+      let signature = req.heaers['x-hub-signature']
+      if(signature !== sign(body)) {
+        return res.end('Not Allowed')
+      }
+    })
     res.setHeader('Content-Type', 'application/json')
     res.end(JSON.stringify({ok: true}))
   }else {
