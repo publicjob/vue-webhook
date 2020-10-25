@@ -11,7 +11,7 @@ npm run build
 echo "开始执行构建"
 docker build -t vue-front:1.0 .
 echo "停止久容器并删除旧容器"
-docker stop vue-back-container
-docker rm vue-back-container
+docker stop vue-front-container
+docker rm vue-front-container
 echo "启动新容器"
-docker container run -p 80:80 --name  vue-back-container -d vue-front:1.0
+docker container run -p 80:80 --name  vue-front-container -d vue-front:1.0
