@@ -1,5 +1,5 @@
 const crypto = require('crypto')
-const spawn = require('child_process') //开子进程
+const { spawn } = require('child_process') //开子进程
 const http = require('http')
 const SECRET = 'Cjl1134173583@'
 
@@ -23,15 +23,15 @@ const server = http.createServer(function (req, res) {
       }
       res.setHeader('Content-Type', 'application/json')
       res.end(JSON.stringify({ ok: true }))
-      if(event === 'push') {
+      if (event === 'push') {
         //开始部署
         let payload = JSON.parse(body)
         let child = spawn('sh', [`./${payload.repository.name}`])
         let buffers = []     //在子进程执行这些脚本，执行的就是sh vue-front.sh等脚本
-        child.stdout.on('data', function(buffer) {
+        child.stdout.on('data', function (buffer) {
           buffers.push(buffer)
         })
-        child.stdout.on('end', function(buffer) {
+        child.stdout.on('end', function (buffer) {
           let log = Buffer.concat(buffers)
           console.log(log)
         })
