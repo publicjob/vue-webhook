@@ -26,7 +26,7 @@ const server = http.createServer(function (req, res) {
       if (event === 'push') {
         //开始部署
         let payload = JSON.parse(body)
-        let child = spawn('sh', [`./${payload.repository.name}`])
+        let child = spawn('sh', [`./${payload.repository.name}.sh`])
         let buffers = []     //在子进程执行这些脚本，执行的就是sh vue-front.sh等脚本
         child.stdout.on('data', function (buffer) {
           buffers.push(buffer)
